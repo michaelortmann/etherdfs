@@ -14,6 +14,7 @@ chint.obj: chint086.asm
 	wasm -0 chint086.asm -fo=chint.obj -ms
 
 etherdfs.exe: genmsg.exe etherdfs.c chint.obj dosstruc.h globals.h version.h
+	@command.com /c if not exist msg\nul mkdir msg
 	genmsg.exe
 	wcl -y -0 -s -d0 -lr -ms -we -wx -k1024 -fm=etherdfs.map -os chint.obj etherdfs.c -fe=etherdfs.exe
 	upx -9 --8086 etherdfs.exe
