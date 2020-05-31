@@ -1843,19 +1843,17 @@ int main(int argc, char **argv) {
     cld                /* clear direction flag (increment si/di) */
     mov es, newdataseg /* load es with newdataseg */
     rep movsb          /* execute copy DS:SI -> ES:DI */
-    /* restore registers (but NOT es, instead save it into AX for now) */
+    /* restore registers (but NOT es for now) */
     popf
     pop di
     pop si
     pop cx
-    pop ax
     /* switch to the new DS _AND_ SS now */
     push es
     push es
     pop ds
     pop ss
     /* restore ES */
-    push ax
     pop es
   }
 
@@ -2002,9 +2000,9 @@ int main(int argc, char **argv) {
    * last (partially used) paragraph. */
   _asm {
     mov ax, 3100h  /* AH=31 'terminate+stay resident', AL=0 exit code */
-    mov dx, offset begtextend /* DX = offset of resident code end     */
-    add dx, 256    /* add size of PSP (256 bytes)                     */
-    add dx, 15     /* add 15 to avoid truncating last paragraph       */
+    mov dx, offset begtextend + 256 + 15 /* DX = offset of resident code end          */
+                                         /* add size of PSP (256 bytes)               */
+                                         /* add 15 to avoid truncating last paragraph */
     shr dx, 1      /* convert bytes to number of 16-bytes paragraphs  */
     shr dx, 1      /* the 8086/8088 CPU supports only a 1-bit version */
     shr dx, 1      /* of SHR, so I have to repeat it as many times as */
