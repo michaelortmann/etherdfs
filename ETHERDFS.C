@@ -112,7 +112,7 @@ static unsigned short bsdsum(unsigned char *dataptr, unsigned short l) {
 void __declspec(naked) far pktdrv_recv(void) {
   _asm {
     jmp skip
-    SIG db 'p','k','t','r'
+    SIG db 'pktr'
     skip:
     /* save DS and flags to stack */
     push ds  /* save old ds (I will change it) */
