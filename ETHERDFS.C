@@ -142,11 +142,10 @@ void __declspec(naked) far pktdrv_recv(void) {
     jmp restoreandret
 
   nobufferavail: /* no buffer available, or it's too small -> fail */
-    xor bx,bx      /* set bx to zero... */
-    push bx        /* and push it to the stack... */
-    push bx        /* twice */
-    pop es         /* zero out es and di - this tells the */
-    pop di         /* packet driver 'sorry no can do'     */
+    /* zero out es and di - this tells the packet driver 'sorry no can do' */
+    xor di,di
+    push di
+    pop es
     /* restore flags, bx and ds, then return */
     jmp restoreandret
 
