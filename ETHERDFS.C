@@ -1468,7 +1468,7 @@ __declspec(naked) static unsigned short allocseg(unsigned short sz) {
     mov ax, 5800h /* DOS 2.11+ - GET OR SET MEMORY ALLOCATION STRATEGY
                    * al = 0 means 'get allocation strategy' */
     int 21h       /* now current strategy is in ax */
-    mov cx, ax    /* copy current strategy to cx */
+    push ax       /* push current strategy to stack */
     mov ax, 5801h /* al = 1 means 'set allocation strategy' */
     mov bl, 2     /* 2 or greater means 'last fit' */
     int 21h
@@ -1477,10 +1477,9 @@ __declspec(naked) static unsigned short allocseg(unsigned short sz) {
     mov bx, dx    /* number of paragraphs to allocate */
     /* bx should contains number of 16-byte paragraphs instead of bytes */
     add bx, 15    /* make sure to allocate enough paragraphs */
-    shr bx, 1     /* convert bytes to number of 16-bytes paragraphs  */
-    shr bx, 1     /* the 8086/8088 CPU supports only a 1-bit version */
-    shr bx, 1     /* of SHR, so I have to repeat it as many times as */
-    shr bx, 1     /* many bits I need to shift.                      */
+    mov cl, 4     /* convert bytes to number of 16-bytes paragraphs  */
+    shr bx, cl    /* the 8086/8088 CPU supports only a 1-bit version
+                   * of SHR so I use the reg,CL method               */
     mov dx, 0     /* pre-set res to failure (0) */
     int 21h       /* returns allocated segment in AX */
     /* check CF */
@@ -1489,12 +1488,12 @@ __declspec(naked) static unsigned short allocseg(unsigned short sz) {
     failed:
     /* set strategy back to its initial setting */
     mov ax, 5801h
-    mov bx, cx
+    pop bx        /* pop current strategy from stack */ 
     int 21h
     ret
   }
 }
-#pragma aux allocseg parm [dx] value [dx] modify exact [ax bx cx dx] nomemory;
+#pragma aux allocseg parm [dx] value [dx] modify exact [ax bx cl dx] nomemory;
 
 /* free segment previously allocated through allocseg() */
 static void freeseg(unsigned short segm) {
@@ -1999,10 +1998,9 @@ int main(int argc, char **argv) {
     mov dx, offset begtextend + 256 + 15 /* DX = offset of resident code end          */
                                          /* add size of PSP (256 bytes)               */
                                          /* add 15 to avoid truncating last paragraph */
-    shr dx, 1      /* convert bytes to number of 16-bytes paragraphs  */
-    shr dx, 1      /* the 8086/8088 CPU supports only a 1-bit version */
-    shr dx, 1      /* of SHR, so I have to repeat it as many times as */
-    shr dx, 1      /* many bits I need to shift.                      */
+    mov cl, 4      /* convert bytes to number of 16-bytes paragraphs  */
+    shr bx, cl     /* the 8086/8088 CPU supports only a 1-bit version
+                    * of SHR so I use the reg,CL method               */
     int 21h
   }
 
