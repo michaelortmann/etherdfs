@@ -131,8 +131,7 @@ void __declspec(naked) far pktdrv_recv(void) {
     jg nobufferavail  /* if signed > 0, then we are busy already */
 
     /* buffer is available, set its seg:off in es:di */
-    push ds /* set es:di to recvbuff */
-    pop es
+    mov es,bx /* set es:di to recvbuff */
     mov di, offset glob_pktdrv_recvbuff
     /* set bufferlen to expected len and switch it to neg until data comes */
     mov glob_pktdrv_recvbufflen, cx
