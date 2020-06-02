@@ -81,23 +81,22 @@ static int len_if_no_wildcards(char far *s) {
 }
 
 /* computes a BSD checksum of l bytes at dataptr location */
-static unsigned short bsdsum(unsigned char *dataptr, unsigned short l) {
-  unsigned short cksum = 0;
+static unsigned short bsdsum(unsigned char *dataptr, unsigned short l);
+/* Must be [si] [cx] and NOT [si cx] */
+#pragma aux bsdsum parm [si] [cx] value [bx] modify exact [ax bx cx si] nomemory;
+__declspec(naked) static unsigned short bsdsum(unsigned char *dataptr, unsigned short l) {
   _asm {
     cld           /* clear direction flag */
     xor bx, bx    /* bx will hold the result */
     xor ax, ax
-    mov cx, l
-    mov si, dataptr
     iterate:
     lodsb         /* load a byte from DS:SI into AL and INC SI */
     ror bx, 1
     add bx, ax
     dec cx        /* DEC CX + JNZ could be replaced by a single LOOP */
     jnz iterate   /* instruction, but DEC+JNZ is 3x faster (on 8086) */
-    mov cksum, bx
+    ret
   }
-  return(cksum);
 }
 
 /* this function is called two times by the packet driver. One time for
