@@ -1,6 +1,7 @@
 #
 # Makefile for etherdfs, requires Open Watcom v1.9
 # Copyright (C) 2017 Mateusz Viste
+# Copyright (c) 2020 Michael Ortmann
 #
 # http://etherdfs.sourceforge.net
 #
