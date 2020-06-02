@@ -24,7 +24,7 @@ implementation of EtherSRV exists only for Linux (ethersrv-linux).
 Since EtherDFS runs over raw ethernet, it doesn't need any TCP/IP stack. It
 only requires a working packet driver. The catch of using raw ethernet frames
 is that EtherDFS is, by design, unable to communicate outside of a single LAN.
-In some context this might actually be a strenght, you don't need to worry
+In some context this might actually be a strength, you don't need to worry
 that your EtherDFS transfer will somehow leak outside your LAN - it's simply
 not possible.
 
@@ -70,7 +70,7 @@ Future versions will probably provide a DOS version of ethersrv, too.
 ===[ Can I use other networking software while EtherDFS is loaded? ]==========
 
 EtherDFS provides low-level I/O disk connectivity through networking. As such,
-it might be adviseable to dedicate a single network interface on your PC
+it might be advisable to dedicate a single network interface on your PC
 solely for the purpose of handling EtherDFS communications - this would
 provide the best possible performance and reliability. However, if your PC has
 only one ethernet interface, you still can use EtherDFS simulteanously with
@@ -88,7 +88,7 @@ This is the first question I get whenever I introduce EtherDFS to someone:
 
 I thought about the pros and cons of the multiple technical possibilities, and
 the advantages of using raw Ethernet frames vastly outweighted the
-constraints. It is to be noted that Ethernet is ubiquitious, has been for the
+constraints. It is to be noted that Ethernet is ubiquitous, has been for the
 past 30 years, and is likely to stay here for a while. Here below I paste my
 "pros & cons" list, so my reasons should become clear.
 

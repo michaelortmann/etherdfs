@@ -32,7 +32,7 @@
 #define DEBUGLEVEL 0
 
 /* define the maximum size of a frame, as sent or received by etherdfs.
- * example: value 1084 accomodates payloads up to 1024 bytes +all headers */
+ * example: value 1084 accommodates payloads up to 1024 bytes +all headers */
 #define FRAMESIZE 1090
 
 #include "dosstruc.h" /* definitions of structures used by DOS */
@@ -285,7 +285,7 @@ static unsigned short sendquery(unsigned char query, unsigned char drive, unsign
    * already by inthandler() */
   drive = glob_data.ldrv[drive];
 
-  /* bufflen provides payload's lenght, but I prefer knowing the frame's len */
+  /* bufflen provides payload's length, but I prefer knowing the frame's len */
   bufflen += 60;
 
   /* if query too long then quit */
@@ -516,7 +516,7 @@ void process2f(void) {
         } else {
           chunklen = FRAMESIZE - 60;
         }
-        /* query is OOOOSSLL (offset, start sector, lenght to read) */
+        /* query is OOOOSSLL (offset, start sector, length to read) */
         ((unsigned long *)buff)[0] = sftptr->file_pos + totreadlen;
         ((unsigned short *)buff)[2] = sftptr->start_sector;
         ((unsigned short *)buff)[3] = chunklen;

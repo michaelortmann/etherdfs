@@ -87,7 +87,7 @@ DDD... = binary data of the read file
 
 Note: AX is set to non-zero on error. Be warned that although LL can be set
       as high as 65535, the unerlying Ethernet network is unlikely to be able
-      to accomodate such amounts of data.
+      to accommodate such amounts of data.
 ==============================================================================
 WRITEFILE (0x09)
 
@@ -95,7 +95,7 @@ Request: OOOOSSDDD...
 
 OOOO = offset of the file (where the read must start), 32-bits
 SS   = starting sector of the open file (ie. its 16-bit identifier)
-DDD... = binary data that has to be written (variable lenght)
+DDD... = binary data that has to be written (variable length)
 
 Answer: LL
 
