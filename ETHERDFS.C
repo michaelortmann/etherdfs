@@ -82,9 +82,6 @@ static int len_if_no_wildcards(char far *s) {
 }
 
 /* computes a BSD checksum of l bytes at dataptr location */
-static unsigned short bsdsum(unsigned char *dataptr, unsigned short l);
-/* Must be [si] [cx] and NOT [si cx] */
-#pragma aux bsdsum parm [si] [cx] value [bx] modify exact [ax bx cx si] nomemory;
 __declspec(naked) static unsigned short bsdsum(unsigned char *dataptr, unsigned short l) {
   _asm {
     cld           /* clear direction flag */
@@ -99,6 +96,8 @@ __declspec(naked) static unsigned short bsdsum(unsigned char *dataptr, unsigned 
     ret
   }
 }
+/* Must be [si] [cx] and NOT [si cx] */
+#pragma aux bsdsum parm [si] [cx] value [bx] modify exact [ax bx cx si] nomemory;
 
 /* this function is called two times by the packet driver. One time for
  * telling that a packet is incoming, and how big it is, so the application
