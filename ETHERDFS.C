@@ -1461,41 +1461,40 @@ static void byte2hex(char *s, unsigned char b) {
 /* allocates sz bytes of memory and returns the segment to allocated memory or
  * 0 on error. the allocation strategy is 'highest possible' (last fit) to
  * avoid memory fragmentation */
-static unsigned short allocseg(unsigned short sz) {
-  unsigned short volatile res = 0;
-  /* sz should contains number of 16-byte paragraphs instead of bytes */
-  sz += 15; /* make sure to allocate enough paragraphs */
-  sz >>= 4;
+__declspec(naked) static unsigned short allocseg(unsigned short sz) {
   /* ask DOS for memory */
   _asm {
-    push cx /* save cx */
     /* set strategy to 'last fit' */
-    mov ah, 58h
-    xor al, al  /* al = 0 means 'get strategy' */
-    int 21h     /* now current strategy is in ax */
-    mov cx, ax  /* copy current strategy to cx */
-    mov ah, 58h
-    mov al, 1   /* al = 1 means 'set strategy' */
-    mov bl, 2   /* 2 or greater means 'last fit' */
+    mov ax, 5800h /* DOS 2.11+ - GET OR SET MEMORY ALLOCATION STRATEGY
+                   * al = 0 means 'get allocation strategy' */
+    int 21h       /* now current strategy is in ax */
+    mov cx, ax    /* copy current strategy to cx */
+    mov ax, 5801h /* al = 1 means 'set allocation strategy' */
+    mov bl, 2     /* 2 or greater means 'last fit' */
     int 21h
     /* do the allocation now */
-    mov ah, 48h     /* alloc memory (DOS 2+) */
-    mov bx, sz      /* number of paragraphs to allocate */
-    mov res, 0      /* pre-set res to failure (0) */
-    int 21h         /* returns allocated segment in AX */
+    mov ah, 48h   /* DOS 2+ - ALLOCATE MEMORY */
+    mov bx, dx    /* number of paragraphs to allocate */
+    /* bx should contains number of 16-byte paragraphs instead of bytes */
+    add bx, 15    /* make sure to allocate enough paragraphs */
+    shr bx, 1     /* convert bytes to number of 16-bytes paragraphs  */
+    shr bx, 1     /* the 8086/8088 CPU supports only a 1-bit version */
+    shr bx, 1     /* of SHR, so I have to repeat it as many times as */
+    shr bx, 1     /* many bits I need to shift.                      */
+    mov dx, 0     /* pre-set res to failure (0) */
+    int 21h       /* returns allocated segment in AX */
     /* check CF */
     jc failed
-    mov res, ax     /* set res to actual result */
+    mov dx, ax    /* set res to actual result */
     failed:
     /* set strategy back to its initial setting */
-    mov ah, 58h
-    mov al, 1
+    mov ax, 5801h
     mov bx, cx
     int 21h
-    pop cx    /* restore cx */
+    ret
   }
-  return(res);
 }
+#pragma aux allocseg parm [dx] value [dx] modify exact [ax bx cx dx] nomemory;
 
 /* free segment previously allocated through allocseg() */
 static void freeseg(unsigned short segm) {
