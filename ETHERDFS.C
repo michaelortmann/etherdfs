@@ -903,7 +903,7 @@ void __interrupt __far inthandler(union INTPACK r) {
    * this will also contain the DS segment to use and actually set it */
   _asm {
     jmp SKIPTSRSIG
-    TSRSIG DB 'M','V','e','t'
+    TSRSIG db 'MVet'
     SKIPTSRSIG:
     /* save AX */
     push ax
