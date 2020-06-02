@@ -1285,13 +1285,13 @@ static struct cdsstruct far *getcds(unsigned int drive) {
 
 /* primitive message output used instead of printf() to limit memory usage
  * and binary size */
-static void outmsg(char *s) {
-  _asm {
-    mov ah, 9h  /* DOS 1+ - WRITE STRING TO STANDARD OUTPUT */
-    mov dx, s   /* small memory model: no need to set DS, 's' is an offset */
-    int 21h
-  }
-}
+static void outmsg(char *s);
+#pragma aux outmsg =                                                         \
+  "mov ah, 9h" /* DOS 1+ - WRITE STRING TO STANDARD OUTPUT                   \
+                * DS:DX -> '$'-terminated string                             \
+                * small memory model: no need to set DS, 's' is an offset */ \
+  "int 21h"                                                                  \
+parm [dx] modify exact [ah] nomemory;
 
 /* zero out an object of l bytes */
 static void zerobytes(void *obj, unsigned short l) {
