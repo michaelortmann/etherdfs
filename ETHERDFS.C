@@ -1653,8 +1653,7 @@ int main(int argc, char **argv) {
     }
     /* am I still at the top of the int 2Fh chain? */
     _asm {
-      /* save AX, BX and ES */
-      push ax
+      /* save BX and ES */
       push bx
       push es
       /* fetch int vector */
@@ -1662,10 +1661,9 @@ int main(int argc, char **argv) {
       int 21h
       mov myseg, es
       mov myoff, bx
-      /* restore AX, BX and ES */
+      /* restore BX and ES */
       pop es
       pop bx
-      pop ax
     }
     int2fptr = (unsigned char far *)MK_FP(myseg, myoff) + 24; /* the interrupt handler's signature appears at offset 24 (this might change at each source code modification) */
     /* look for the "MVet" signature */
@@ -1675,9 +1673,7 @@ int main(int argc, char **argv) {
     }
     /* get the ptr to TSR's data */
     _asm {
-      push ax
       push bx
-      push cx
       pushf
       mov ah, etherdfsid
       mov al, 1
@@ -1691,9 +1687,7 @@ int main(int argc, char **argv) {
       mov mydataseg, dx
       fail:
       popf
-      pop cx
       pop bx
-      pop ax
     }
     if (myseg == 0xffffu) {
       #include "msg\\tsrcomfa.c"
@@ -1705,10 +1699,8 @@ int main(int argc, char **argv) {
     myseg = tsrdata->prev_2f_handler_seg;
     myoff = tsrdata->prev_2f_handler_off;
     _asm {
-      /* save AX, DS and DX */
-      push ax
+      /* save DS */
       push ds
-      push dx
       /* set DS:DX */
       mov ax, myseg
       push ax
@@ -1717,16 +1709,13 @@ int main(int argc, char **argv) {
       /* call INT 21h,25h for int 2Fh */
       mov ax, 252Fh
       int 21h
-      /* restore AX, DS and DX */
-      pop dx
+      /* restore DS */
       pop ds
-      pop ax
     }
     /* get the address of the packet driver routine */
     pktint = tsrdata->pktint;
     _asm {
-      /* save AX, BX and ES */
-      push ax
+      /* save BX and ES */
       push bx
       push es
       /* fetch int vector */
@@ -1735,10 +1724,9 @@ int main(int argc, char **argv) {
       int 21h
       mov myseg, es
       mov myoff, bx
-      /* restore AX, BX and ES */
+      /* restore BX and ES */
       pop es
       pop bx
-      pop ax
     }
     pktdrvcall = myseg;
     pktdrvcall <<= 16;
@@ -1746,9 +1734,8 @@ int main(int argc, char **argv) {
     /* unregister packet driver */
     myhandle = tsrdata->pkthandle;
     _asm {
-      /* save AX and BX */
+      /* save AX */
       push ax
-      push bx
       /* prepare the release_type() call */
       mov ah, 3 /* release_type() */
       mov bx, myhandle
@@ -1758,8 +1745,7 @@ int main(int argc, char **argv) {
       pushf
       cli
       call dword ptr pktdrvcall
-      /* restore AX and BX */
-      pop bx
+      /* restore AX */
       pop ax
     }
     /* set all mapped drives as 'not available' */
@@ -1827,7 +1813,6 @@ int main(int argc, char **argv) {
   _asm {
     /* save registers on the stack */
     push es
-    push cx
     push si
     push di
     pushf
@@ -1842,7 +1827,6 @@ int main(int argc, char **argv) {
     popf
     pop di
     pop si
-    pop cx
     /* switch to the new DS _AND_ SS now */
     push es
     push es
@@ -1974,14 +1958,12 @@ int main(int argc, char **argv) {
   _asm {
     cli
     mov ax, 252fh /* AH=set interrupt vector  AL=2F */
-    push ds /* preserve DS and DX */
-    push dx
+    push ds /* preserve DS */
     push cs /* set DS to current CS, that is provide the */
     pop ds  /* int handler's segment */
     mov dx, offset inthandler /* int handler's offset */
     int 21h
-    pop dx /* restore DS and DX to previous values */
-    pop ds
+    pop ds /* restore DS to previous value */
     sti
   }
 
