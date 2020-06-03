@@ -41,3 +41,8 @@ game "Heretic" is unable to start when launched from within an EtherDFS drive.
 Not sure whether this is due to a bug in EtherDFS, the RTSPKT driver or both.
 
 ==============================================================================
+
+aPACK v1.00 (http://www.ibsensoftware.com/products_aPACK.html) doesn't write
+to output-file if current directory is an EtherDFS dir.
+
+==============================================================================
