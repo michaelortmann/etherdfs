@@ -1981,7 +1981,7 @@ int main(int argc, char **argv) {
                                          /* add size of PSP (256 bytes)               */
                                          /* add 15 to avoid truncating last paragraph */
     mov cl, 4      /* convert bytes to number of 16-bytes paragraphs  */
-    shr bx, cl     /* the 8086/8088 CPU supports only a 1-bit version
+    shr dx, cl     /* the 8086/8088 CPU supports only a 1-bit version
                     * of SHR so I use the reg,CL method               */
     int 21h
   }
