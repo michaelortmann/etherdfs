@@ -5,7 +5,8 @@ Description:
   to a local drive letter, using raw ethernet frames to communicate.
 
   This is version 0.8.2 from http://etherdfs.sourceforge.net plus reduced
-  EtherDFS resident footprint and some other patches by me.
+  EtherDFS resident footprint (7440 -> 7408 bytes) and some other patches by
+  me.
 
 License:
 
