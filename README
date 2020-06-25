@@ -1,7 +1,22 @@
-EtherDFS (The Ethernet DOS File System) is an 'installable filesystem' TSR for
-DOS.
+Description:
 
-This is v0.8.2 from http://etherdfs.sourceforge.net/ plus some patches by me.
+  EtherDFS (The Ethernet DOS File System) is an 'installable filesystem' TSR for
+  DOS. It maps a drive from a remote computer (typically Freebsd or Linux based)
+  to a local drive letter, using raw ethernet frames to communicate.
+
+  This is version 0.8.2 from http://etherdfs.sourceforge.net plus reduced
+  EtherDFS resident footprint and some other patches by me.
+
+License:
+
+  MIT License
+  Copyright (C) 2017, 2018 Mateusz Viste
+  Copyright (c) 2020 Michael Ortmann
+
+Website:
+
+  https://gitlab.com/mortmann/ethersrv
+  http://etherdfs.sourceforge.net
 
 Thanks and Greetings to Mateusz Viste.
 

@@ -1,5 +1,8 @@
 EtherDFS changelog history
 
+v0.8.2m [20200603]
+ - reduced EtherDFS resident footprint
+
 v0.8.2 [2018-02-03]:
  - support for lock/unlock operations (INT 2Fh,110Ah).
 
